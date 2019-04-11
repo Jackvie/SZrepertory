@@ -1,0 +1,87 @@
+
+<html>
+
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function(){
+            
+            $.ajax({
+                'url':"/user/prov/",
+                'dataType':'json',
+                success:function(data){
+                    var $prov = $("#prov")
+                    $.each(data.data, function(index, item){
+                    var $pid = item[0]
+                    var $ptitle = item[1]
+                        $prov.append("<option value="+$pid+">"+$ptitle+"</option>")
+                    })    
+                },
+                error:function(){alert('error')}
+            })
+
+            $("#prov").change(function(){
+                var $pid = $(this).val()
+                $("#dis").empty().append(
+                            "<option>请输入区</option>"
+                        )
+                $("#city").empty().append("<option>请选择市</option>")
+                $.ajax({
+                    'url':"/user/city"+$pid+"/",
+                    'type':'get',
+                    'dataType':'json',
+                    success:function(data){
+                        var $city = $("#city")
+                        $.each(data.data, function(index, item){
+                            var $cid = item[0]
+                            var $ctitle = item[1]
+                            $city.append(
+                                    "<option value="+$cid+">"+$ctitle+"</option>"
+                                    )
+                        })
+                    },
+                    error:function(){alert('error')}
+                })
+            })
+
+            $("#city").change(function(){
+                var $cid = $(this).val()
+                $("#dis").empty().append(
+                            "<option>请输入区</option>"
+                        )
+                $.ajax({
+                    "url":"/user/dis"+$cid+"/",
+                    "type":"get",
+                    "dataType":"json",
+                    success:function(data){
+                        var $dis = $("#dis")
+                        $.each(data.data,function(index,item){
+                            var $did = item[0]
+                            var $dtitle = item[1]
+                            $dis.append(
+                                        "<option value="+$dis+">"+$dtitle+"</option>"
+                                    )
+                        })
+                    },
+                    error:function(){alert('error')}
+                })
+            })
+
+        }) 
+
+
+    </script>
+
+<body>
+    <select id="prov">
+        <option>请选择省</option>
+    </select>
+
+    <select id="city">
+        <option>请选择市</option>
+    </select>
+
+    <select id="dis">
+        <option>请选择区/县</option>
+    </select>
+</body>
+</html>
