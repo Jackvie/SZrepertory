@@ -5,19 +5,20 @@ import urllib.request
 
 monkey.patch_all()
 
-def get_url(url):
+def get_url(one_url):
     '''接受网址返回图片列表'''
-    response=urllib.request.urlopen(url)
+    response=urllib.request.urlopen(one_url)
     html=response.read()
     html = zlib.decompress(html, 16+zlib.MAX_WBITS)
-    html=html.decode("utf-8")
-    img_list = re.findall(r"https://[^/]+/[^/]+/\d+/.*?jpg", html)
+    print(chardet.detect(html))
+    html = html.decode("utf-8")
+    img_list = re.findall(r"https://[^/]+/[^/]+/\d+/.{4,40}jpg", html)
     return img_list
 
 def download(img_name, img_url):
     '''下载一个图片'''
     req = urllib.request.urlopen(img_url)
-    content = response.read()
+    content = req.read()
     with open(img_name, "wb") as f:
         f.write(content)
 
