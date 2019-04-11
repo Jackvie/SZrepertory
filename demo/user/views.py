@@ -10,7 +10,7 @@ def index(request,num,alpha):
 
 
 def change(request):
-    url = reverse("user:index", args=11,0))
+    url = reverse("user:index", args=(11,0))
     return redirect(url)
     return render(request, 'user/index.html',{})
 
