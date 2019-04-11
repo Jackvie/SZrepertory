@@ -15,5 +15,6 @@ urlpatterns = [
             url(r"^dis(?P<pid>\d+)/$", views.city),
             url(r"^pages_upload_images/$", views.pages_upload_images),
             url(r"^handle_images/$", views.handle_images),
+            url(r"^dis_page(\d?)/$", views.dis_page),
         ]
 

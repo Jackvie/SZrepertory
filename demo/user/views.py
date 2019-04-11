@@ -3,6 +3,7 @@ from django.http import *
 from django.urls import reverse
 from user.models import Areas,PicUpload
 from demo import settings
+from django.core.paginator import Paginator
 # Create your views here.
 
 def index(request,num,alpha):
@@ -72,6 +73,23 @@ def handle_images(request):
     p.save()  # 向数据库中添加一条记录
 
     return HttpResponse("存储完毕")
+
+# 省级地区分页显示
+def dis_page(request, num):
+
+    # filter(多类过滤一类--关键属性__一类字段__判断)
+    # filter(一类过滤多类--多类名小写__多类字段__判断)
+    # filter(一类/多类过滤自身---自身字段__判断)
+    area = Areas.objects.filter(apid__isnull=True)  # 返回省级地区所有信息对象查询集
+
+    # 每页显示10条信息,创建Paginator类的对象
+    paginator = Paginator(area, 10)
+
+    # 创建Page类对象，返回第几页信息
+    if num == "":
+        num = 1
+    page = paginator.page(int(num))
+    return render(request,"user/dis_page.html",{"page":page})
 
 
 

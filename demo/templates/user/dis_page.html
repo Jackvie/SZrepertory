@@ -1,0 +1,22 @@
+<h1>province</h1>
+<ul>
+    {% for i in page %}
+        <li>{{i.atitle}}</li>
+
+    {% endfor %}
+</ul>
+<br />
+
+{% if page.has_previous %}
+    <a href = "/user/dis_page{{page.previous_page_number}}">&lt;上一页</a>
+{% endif %}
+{% for i in page.paginator.page_range %}
+    {% if i == page.number %}
+        <b>{{i}}</b>
+    {% else %}
+        <a href="/user/dis_page{{i}}">{{i}}</a>
+    {% endif %}
+{% endfor %}
+{% if page.has_next %}
+    <a href = "/user/dis_page{{page.next_page_number}}">&gt;下一页</a>
+{% endif %}
