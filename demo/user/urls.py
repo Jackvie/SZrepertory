@@ -15,5 +15,9 @@ urlpatterns = [
             url(r"^dis(?P<pid>\d+)/$", views.city),
             url(r"^pages_upload_images/$", views.pages_upload_images),
             url(r"^handle_images/$", views.handle_images),
+            url(r"^test_request_META/$", views.test_request_META),
+            url(r"^set_cookie/$", views.set_cookie),
+            url(r"^get_cookie/$",views.get_cookie),
+            url(r"^session_to_redis/$", views.session_to_redis),
         ]
 
