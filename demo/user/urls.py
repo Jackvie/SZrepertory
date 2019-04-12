@@ -20,5 +20,8 @@ urlpatterns = [
             url(r"^set_cookie/$", views.set_cookie),
             url(r"^get_cookie/$",views.get_cookie),
             url(r"^session_to_redis/$", views.session_to_redis),
+            url(r"^register/$", views.RegisterView.as_view()),
+            url(r"^form_func/$", views.form_func),
+            url(r"^demo/$", views.DemoView.as_view()),
         ]
 

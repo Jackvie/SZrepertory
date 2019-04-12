@@ -119,3 +119,48 @@ def session_to_redis(request):
     except Exception as e:
         print(e)
     return HttpResponse("session")
+
+
+# 定义装饰器
+def my_decorate(func):
+    def wrapper(request, *args, **kwargs):
+        print("被装饰")
+        print(request.path)
+        return func(request, *args, **kwargs)
+    return wrapper
+
+
+from django.views.generic import View
+class RegisterView(View):
+    """类视图处理register的get/post/put请求"""
+    def get(self, request):
+        """处理get请求"""
+        return HttpResponse("registerget")
+
+    def post(self, request):
+        """处理post请求"""
+        return HttpResponse("registerpost")
+
+def form_func(request):
+    """访问表单，返回一个可以get/post的页面"""
+    return render(request, "user/form_func.html", {})
+
+
+from django.utils.decorators import method_decorator
+# @method_decorator(my_decorate, name="get")
+# @method_decorator(my_decorate, name="dispatch")
+class DemoView(View):
+    """处理demo的请求的类视图"""
+    def get(self,request):
+        return HttpResponse("demoget")
+    
+    @method_decorator(my_decorate)
+    def post(self,request):
+        return HttpResponse("demopost")
+
+    def put(self,request):
+        return HttpResponse("demoput")
+
+
+
+
