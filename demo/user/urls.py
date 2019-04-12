@@ -23,5 +23,14 @@ urlpatterns = [
             url(r"^register/$", views.RegisterView.as_view()),
             url(r"^form_func/$", views.form_func),
             url(r"^demo/$", views.DemoView.as_view()),
+            url(r"^demo2/$", views.Demo2View.as_view()),
+            url(r"^demo3/$", views.Demo3View.as_view()),
+            url(r"^ask_ajax/$", views.ask_ajax),
+            url(r"^for_ajax/$", views.for_ajax),
+            url(r"^test_middleware/$", views.test_middleware),
+            url(r"^test_django_filter/$", views.test_django_filter),
+            url(r"^ismyfilter/$", views.ismyfilter),
+            url(r"^dad/$", views.dad),
+            url(r"^son/$", views.son),
         ]
 
