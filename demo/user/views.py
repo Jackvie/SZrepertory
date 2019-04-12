@@ -92,5 +92,30 @@ def dis_page(request, num):
     return render(request,"user/dis_page.html",{"page":page})
 
 
+def test_request_META(request):
+    m = request.META
+    m = (m["CONTENT_LENGTH"],m["CONTENT_TYPE"],m["HTTP_ACCEPT"],m["REMOTE_HOST"],m["REMOTE_ADDR"],m["REQUEST_METHOD"])
+    return HttpResponse(m[-3])
 
 
+def set_cookie(request):
+    res = HttpResponseRedirect("/user/get_cookie")
+    res.set_cookie("one","aaaa", max_age = 60)
+    res.set_cookie("two","bbb", max_age = 60)
+    return res
+
+def get_cookie(request):
+    try:
+        res = request.COOKIES["two"]
+    except:
+        res = "error"
+    return HttpResponse(res)
+
+def session_to_redis(request):
+    request.session["first"] = "lol"
+    request.session["second"] = "olo"
+    try:
+        print(request.session,request.session["first"],request.session["second"])
+    except Exception as e:
+        print(e)
+    return HttpResponse("session")
