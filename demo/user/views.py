@@ -15,8 +15,10 @@ def change(request):
     return redirect(url)
     return render(request, 'user/index.html',{})
 
+
 def login(request):
     return render(request, 'user/login.html',{})
+
 
 def login_check(request):
     username2 = request.POST.get("username2")
@@ -24,17 +26,21 @@ def login_check(request):
     print(request.session["username2"])
     return HttpResponse(username2)
 
+
 def test1(request):
     res = HttpResponse(content="""{"a":1,"b":2}""", content_type="json", status="200")
     return res
     # return JsonResponse({"a":1,"b":2})
 
+
 def test2(request):
     return render(request, 'user/test.html', {})
+ 
 
 # 返回省市区的页面
 def msg(request):
     return render(request, 'user/msg.html')
+
 
 # 完成省请求的接口
 def prov(request):
@@ -43,6 +49,7 @@ def prov(request):
     for i in province:
         null_list.append((i.aid,i.atitle))
     return JsonResponse({"data":null_list})
+
 
 # 完成市,区请求接口
 def city(request, pid):
@@ -54,9 +61,11 @@ def city(request, pid):
         null_list.append((i.aid, i.atitle))
     return JsonResponse({"data":null_list})
 
+
 # 返回上传图片的页面
 def pages_upload_images(request):
     return render(request, 'user/pages_upload_images.html', {})
+
 
 # 上传图片的处理接口
 def handle_images(request):
@@ -73,6 +82,7 @@ def handle_images(request):
     p.save()  # 向数据库中添加一条记录
 
     return HttpResponse("存储完毕")
+
 
 # 省级地区分页显示
 def dis_page(request, num):
@@ -104,12 +114,14 @@ def set_cookie(request):
     res.set_cookie("two","bbb", max_age = 60)
     return res
 
+
 def get_cookie(request):
     try:
         res = request.COOKIES["two"]
     except:
         res = "error"
     return HttpResponse(res)
+
 
 def session_to_redis(request):
     request.session["first"] = "lol"
@@ -123,8 +135,9 @@ def session_to_redis(request):
 
 # 定义装饰器
 def my_decorate(func):
+    print("被装饰")
     def wrapper(request, *args, **kwargs):
-        print("被装饰")
+        print("闭包被调用")
         print(request.path)
         return func(request, *args, **kwargs)
     return wrapper
@@ -140,6 +153,7 @@ class RegisterView(View):
     def post(self, request):
         """处理post请求"""
         return HttpResponse("registerpost")
+ 
 
 def form_func(request):
     """访问表单，返回一个可以get/post的页面"""
@@ -162,5 +176,82 @@ class DemoView(View):
         return HttpResponse("demoput")
 
 
+# 类视图Mixin扩展类
+class MyMixin(object):
+    @classmethod
+    def as_view(cls, *args, **kwargs):
+        print(super())
+        view = super().as_view(*args, **kwargs)
+        print(view)
+        print("myMixin")
+        view=my_decorate(view)
+        print(view)
+        return view
 
 
+class Demo2View(MyMixin, View):
+    def get(self, request):
+        return HttpResponse("demo2get")
+
+    def post(self, request):
+        return HttpResponse("demo2post")
+
+
+# 多继承Mixin扩展
+class MyMixin2(object):
+    def list(self, request, *args, **kwargs):
+        print("ip:",self.request.META["REMOTE_ADDR"])
+
+
+class MyMixin3(object):
+    def create(self, request, *args, **kwargs):
+        print(self.request.method)
+
+
+class Demo3View(MyMixin2, MyMixin3, View):
+    def get(self,request):
+        self.list(request)
+        return HttpResponse("demo3get")
+
+    def post(self, request):
+        self.create(request)
+        return HttpResponse("demo3post")
+
+
+# 请求一个内含ajax的模板文件
+def ask_ajax(request):
+    return render(request, "user/ask_ajax.html", {})
+
+
+# ajax请求处理的接口
+def for_ajax(request):
+    ret = request.GET.get("a")
+    print(ret)
+    return JsonResponse({"c":2,"d":"dd"})
+
+
+# 测试中间件
+def test_middleware(request):
+    print("我是视图函数")
+    return HttpResponse("test_middleware")
+
+
+# 测试django自带的过滤器
+from datetime import *
+def test_django_filter(request):
+    return render(request, 'user/test_django_filter.html', {"data1":datetime(1996,7,2,13,45,12),"data2":[1,2,3,4,5],"data3":""})
+
+
+# 自制过滤器
+def ismyfilter(request):
+    data1 = [1,2,3,4,5,6,7]
+    return render(request, 'user/ismyfilter.html', {"data1":data1})
+
+
+# 模板继承-父
+def dad(request):
+    return render(request, 'user/dad.html', {})
+
+# 子
+def son(request):
+    return render(request, 'user/son.html', {})
