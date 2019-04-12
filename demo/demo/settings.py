@@ -58,9 +58,11 @@ ROOT_URLCONF = 'demo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'BACKEND': 'django.template.backends.jinja2.Jinja2', #修改为jinja2
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
+            # 'environment': 'jinja2_env.environment', # jinja2新增
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
