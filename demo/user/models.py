@@ -37,6 +37,7 @@ class BookInfo(models.Model):
     bread = models.IntegerField(default=0, verbose_name="阅读量")
     bcomment = models.IntegerField(default=0, verbose_name="评论量")
     is_delete = models.BooleanField(default=False, verbose_name="逻辑删除")
+    image = models.ImageField(upload_to='booktest', verbose_name='图片', null=True)
 
     def __str__(self):
         return self.btitle
