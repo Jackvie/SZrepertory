@@ -20,10 +20,10 @@ class PicUpload(models.Model):
 # 图书模型类
 class BookInfo(models.Model):
     """图书"""
-    btitle = models.CharField(max_length=20, verbose_name="名称", db_clumn="书名")  # 站点字段名　与　数据库中的字段名
+    btitle = models.CharField(max_length=20, verbose_name="名称", db_column="书名")  # 站点字段名　与　数据库中的字段名
     bpub_date = models.DateField(verbose_name="出版日期")
     bread = models.IntegerField(default=0, verbose_name="阅读量")
-    bcomment = models.InterField(default=0, verbose_name="评论量")
+    bcomment = models.IntegerField(default=0, verbose_name="评论量")
     is_delete = models.BooleanField(default=False, verbose_name="逻辑删除")
 
     def __str__(self):
@@ -42,11 +42,11 @@ class HeroInfo(models.Model):
         (0, 'female'),
         (1, 'male')
     )
-    hname = models.CharField(max_length=20, verbose_name = "名称", db_clumn="英雄名")
+    hname = models.CharField(max_length=20, verbose_name = "名称", db_column="英雄名")
     hgender = models.SmallIntegerField(choices=GENDER_CHOICES, default=0, verbose_name="性别")
-    hcomment = models.CharField(max_length=200 ,verbose_name="备注信息" null=True,blank=True)
-    hbook = models.ForeignKey("BookInfo", on_delete=models.CASCADE,varbose_name="关联的图书")  # 外键
-    is_delete = models.BooleanField(default=False, varbose_name="是否删除")
+    hcomment = models.CharField(max_length=200 ,verbose_name="备注信息", null=True,blank=True)
+    hbook = models.ForeignKey("BookInfo", on_delete=models.CASCADE,verbose_name="关联的图书")  # 外键
+    is_delete = models.BooleanField(default=False, verbose_name="是否删除")
 
     def __str__(self):
         return self.hname
