@@ -6,15 +6,27 @@ class Areas(models.Model):
     aid = models.CharField(max_length=30, primary_key=True)
     atitle = models.CharField(max_length=30)
     apid = models.ForeignKey('Areas',null=True,blank=True,on_delete=models.CASCADE)
+    def __str__(self):
+        # 表里默认显示的每一个对象ｏｂｊｅｃｔ，可以设置为
+        return self.atitle
 
     class Meta:
+        # 表名配置　数据库中　后台中
         db_table = 'areas'
+        verbose_name = "地区表"
+        verbose_name_plural = verbose_name  # 显示的复数名称
+
 
 # 后台上传图片类
 class PicUpload(models.Model):
     pic = models.ImageField(upload_to="user/")
+
+    def __str__(self):
+        return self.pic
     class Meta:
         db_table="picture"
+        verbose_name = "上传图片"
+        verbose_name_plural = verbose_name  # 显示的复数名称
 
 
 # 图书模型类
@@ -28,6 +40,17 @@ class BookInfo(models.Model):
 
     def __str__(self):
         return self.btitle
+    
+    # 此方法作为后台显示字段,需有返回值
+    def pub_date(self):
+        return self.bpub_date
+    pub_date.short_description = "发布日期"  # 方法的short..属性决定此字段名
+    pub_date.admin_order_field = "bpub_date"  # 方法依哪个属性排序
+
+    # 此方法访问关联英雄对象
+    def hero_set(self):
+        return self.heroinfo_set.all()
+    hero_set.short_description = "关联英雄集"
 
     # 设置数据库中的表名与站点的表名
     class Meta:
@@ -50,6 +73,13 @@ class HeroInfo(models.Model):
 
     def __str__(self):
         return self.hname
+
+    # 此方法访问关联对象属性，作为后台字段
+    def book_name(self):
+        return self.hbook.btitle
+    # 设置此方法字段名
+    book_name.short_description = "关联图书"
+    book_name.admin_order_field = "hbook_id"
 
     class Meta:
         db_table = "hero"
