@@ -25,7 +25,7 @@ SECRET_KEY = '3x2&_r*6b2bjhnay6+brzh^v=p^iyjs^k0q)==8cj&ck0k!t!e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'user.middleware.middleware_out',
     'user.middleware.my_middleware',
     'user.middleware.my_middleware2',
+    'user.middleware.my_middleware3',
 ]
 
 ROOT_URLCONF = 'demo.urls'

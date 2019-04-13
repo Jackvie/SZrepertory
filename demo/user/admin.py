@@ -23,7 +23,7 @@ class BookInfoAdmin(admin.ModelAdmin):
     # 分组fieldsets和fields会冲突
     fieldsets =(
                 ('一',{
-                    'fields':['btitle','bpub_date']　 # 组一显示属性
+                    'fields':['btitle','bpub_date']  # 组一显示属性
                     }
                 ),
                 ('二',
