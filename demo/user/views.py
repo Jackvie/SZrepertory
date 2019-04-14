@@ -248,6 +248,11 @@ def ismyfilter(request):
     return render(request, 'user/ismyfilter.html', {"data1":data1})
 
 
+# jinjafilter过滤器
+def isjinjafilter(request):
+    data1 = [1,2,3,4,5,6,7,8,9,10]
+    return render(request, 'user/isjinjafilter.html', {"data1":data1})
+
 # 模板继承-父
 def dad(request):
     return render(request, 'user/dad.html', {})

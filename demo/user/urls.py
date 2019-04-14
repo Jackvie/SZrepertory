@@ -32,5 +32,6 @@ urlpatterns = [
             url(r"^ismyfilter/$", views.ismyfilter),
             url(r"^dad/$", views.dad),
             url(r"^son/$", views.son),
+            url(r"^isjinjafilter/$", views.isjinjafilter),
         ]
 

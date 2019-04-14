@@ -1,0 +1,9 @@
+{{ data1 }}
+{# [1,2,3,4,5,6,7,8,9,10 #}
+{# 模板遍历这个变量，将每个单个数据传递给过滤器，返回符合条件的原数据 #}
+{# jinja2模板注释 #}
+{% for data in data1 %}
+    {% if data|jinjafilter %}
+        <li>{{data}}</li>  
+    {% endif %}
+{% endfor %}
