@@ -7,7 +7,7 @@
             $btn.click(function(){
                 $.ajax({
                     "url":"/user/for_ajax/",
-                    "type":"get",
+                    "type":"post",
                     "data":{"a":1,"b":"bb"},
                     "dataType":"json",
                     success:function(dat){
