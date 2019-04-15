@@ -117,8 +117,13 @@ def set_cookie(request):
 
 def get_cookie(request):
     try:
+        print("-----------",request.COOKIES)
+        print("-----------a",type(request.COOKIES))
+        # if request.COOKIES.has_key("two"):
+        #    print("7777777777777777")  # 字典没有has_key方法
         res = request.COOKIES["two"]
-    except:
+    except Exception as r:
+        print(r)
         res = "error"
     return HttpResponse(res)
 
@@ -126,8 +131,12 @@ def get_cookie(request):
 def session_to_redis(request):
     request.session["first"] = "lol"
     request.session["second"] = "olo"
+    if "first" in request.session:
+        print(">>>>>>>>>>>>>>>")
     try:
         print(request.session,request.session["first"],request.session["second"])
+        print(request.session.get("first"),"ppppppppppppp")
+        print(type(request.session),"-a-a-a-a-a-a")
     except Exception as e:
         print(e)
     return HttpResponse("session")
