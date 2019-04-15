@@ -1,9 +1,8 @@
 import zlib,re,gevent,sys
-from gevent import monkey
 import chardet
 import urllib.request
+from threading import *
 
-monkey.patch_all()
 
 class Images(object):
     the_len = 0
@@ -30,8 +29,8 @@ class Images(object):
     def run(self):
         print("------图片总数:%d------" % Images.the_len)
         for img_url in self.img_list:
-            gev_obj = gevent.spawn(self.download, str(self.num)+".jpg", img_url)
-            gev_obj.join()
+            t = Thread(target=self.download, args=(str(self.num)+".jpg",img_url))
+            t.start()
             self.num += 1
 
 
