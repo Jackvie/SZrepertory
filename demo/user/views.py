@@ -119,6 +119,7 @@ def get_cookie(request):
     try:
         print("-----------",request.COOKIES)
         print("-----------a",type(request.COOKIES))
+        print("-------------", request.COOKIES.__class__)
         # if request.COOKIES.has_key("two"):
         #    print("7777777777777777")  # 字典没有has_key方法
         res = request.COOKIES["two"]
@@ -137,6 +138,7 @@ def session_to_redis(request):
         print(request.session,request.session["first"],request.session["second"])
         print(request.session.get("first"),"ppppppppppppp")
         print(type(request.session),"-a-a-a-a-a-a")
+        print(request.session.__class__,"-b-b-a-a-a-a")
     except Exception as e:
         print(e)
     return HttpResponse("session")
@@ -192,19 +194,26 @@ class MyMixin(object):
         print(super())
         view = super().as_view(*args, **kwargs)
         print(view)
+        print(Demo2View.__mro__,"----------------")
         print("myMixin")
         view=my_decorate(view)
         print(view)
         return view
 
-
+import json
 class Demo2View(MyMixin, View):
     def get(self, request):
-        print(Demo2View.__mro__,"----------------")
         return HttpResponse("demo2get")
 
     def post(self, request):
         return HttpResponse("demo2post")
+
+    def put(self, request):
+        res = request.body.decode()
+        ret = json.loads(res)
+        print(type(res),type(ret))
+        print(res,ret)
+        return HttpResponse("demo3put")
 
 
 # 多继承Mixin扩展
@@ -270,3 +279,5 @@ def dad(request):
 # 子
 def son(request):
     return render(request, 'user/son.html', {})
+
+

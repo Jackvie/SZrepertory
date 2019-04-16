@@ -44,14 +44,14 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.middleware_out',
     'user.middleware.my_middleware',
     'user.middleware.my_middleware2',
-    'user.middleware.my_middleware3',
+    # 'user.middleware.my_middleware3',
 ]
 
 ROOT_URLCONF = 'demo.urls'
