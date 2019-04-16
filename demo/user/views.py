@@ -200,6 +200,7 @@ class MyMixin(object):
 
 class Demo2View(MyMixin, View):
     def get(self, request):
+        print(Demo2View.__mro__,"----------------")
         return HttpResponse("demo2get")
 
     def post(self, request):
