@@ -25,14 +25,18 @@ class Images(object):
         content = req.read()
         with open(img_name, "wb") as f:
             f.write(content)
-        print("下载进度==> %2.f%%" % ((self.num/Images.the_len)*100), end="\r")
+        # print("下载进度==> %2.f%%" % ((self.num/Images.the_len)*100), end="\r")
+        print("===========")
 
     def run(self):
         print("------图片总数:%d------" % Images.the_len)
+        l = list()
         for img_url in self.img_list:
             gev_obj = gevent.spawn(self.download, str(self.num)+".jpg", img_url)
-            gev_obj.join()
+            l.append(gev_obj)
             self.num += 1
+        [i.join() for i in l]
+        print("over")
 
 
 def main():
