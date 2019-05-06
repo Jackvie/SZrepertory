@@ -9,6 +9,7 @@ import re, json, logging
 
 from users.models import User, Address
 from users import constants
+from goods.models import SKU
 from meiduo.utils.response_code import RETCODE
 from meiduo.utils.view import LoginRequiredMixin, LoginRequiredJSONMixin
 from celery_tasks.email.tasks import send_verify_email
@@ -542,3 +543,59 @@ class ChangePasswordView(LoginRequiredMixin, View):
         # # 响应密码修改结果：重定向到登录界面
         return response
 
+
+class UserBrowseHistory(LoginRequiredJSONMixin, View):
+    """用户浏览记录"""
+    def post(self, request):
+        # 接收参数
+        data = json.loads(request.body.decode())
+        sku_id = data.get("sku_id")
+
+        # 校验参数
+        try:
+            SKU.objects.get(id=sku_id)
+        except SKU.DoesNotExist:
+            return http.HttpResponseForbidden('sku不存在')
+
+        # 保存用户浏览数据
+        redis_conn = get_redis_connection("history")
+        pl = redis_conn.pipeline()
+        user_id = request.user.id
+
+        # 去重
+        pl.lrem("history_%s" % user_id, 0, sku_id)
+        # 存储
+        pl.lpush("history_%s" % user_id, sku_id)
+        # 截取
+        pl.ltrim("history_%s" % user_id, 0, 4)
+        # 执行管道
+        pl.execute()
+
+        # 响应结果
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
+
+    def get(self, request):
+        """"skus":[
+        {
+            "id":6,
+            "name":"Apple iPhone 8 Plus (A1864) 256GB 深空灰色 移动联通电信4G手机",
+            "default_image_url":"http://image.meiduo.site:8888/group1/M00/00/02/CtM3BVrRbI2ARekNAAFZsBqChgk3141998",
+            "price":"7988.00"
+        },
+        ......
+    ]"""
+        redis_conn = get_redis_connection("history")
+        user_id = request.user.id
+        sku_id_all = redis_conn.lrange("history_%s" % user_id, 0, -1)
+        skus = list()
+        for sku_id in sku_id_all:
+            sku_id = sku_id.decode()
+            sku = SKU.objects.get(id=sku_id)
+            skus.append({
+                "id": sku_id,
+                "name": sku.name,
+                "default_image_url": sku.default_image.url,
+                "price": sku.price
+            })
+
+        return http.JsonResponse({"code": RETCODE.OK, "errmsg": "success", "skus": skus})
