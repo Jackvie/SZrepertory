@@ -237,3 +237,89 @@ class CartsView(View):
             response.set_cookie('carts', cookie_cart_str, max_age=3600)
             return response
 
+    def delete(self, request):
+        """删除购物车"""
+        # 接收和校验参数
+        json_dict = json.loads(request.body.decode())
+        sku_id = json_dict.get('sku_id')
+        
+        # 判断sku_id是否存在
+        try:
+            SKU.objects.get(id=sku_id)
+        except SKU.DoesNotExist:
+            return http.HttpResponseForbidden('商品不存在')
+
+        # 判断用户是否登录
+        user = request.user
+        if user.is_authenticated:
+        # 用户已登录，删除redis购物车
+            redis_conn = get_redis_connection('carts')
+            pl = redis_conn.pipeline()
+            pl.hdel('carts_%s' % user.id, sku_id)
+            pl.srem('selected_%s' % user.id, sku_id)
+            pl.execute()
+
+            # 删除结束后，没有响应的数据，只需要响应状态码即可
+            return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '删除购物车成功'})
+
+        else:
+            # 用户未登录，删除cookie购物车
+            cart_dict = request.COOKIES.get('carts', {})
+            if len(cart_dict):
+                cart_dict = pickle.loads(base64.b64decode(cart_dict.encode()))
+            # 创建响应对象
+            response = http.JsonResponse({'code': RETCODE.OK, 'errmsg': '删除购物车成功'})
+            if sku_id in cart_dict.keys():
+                del cart_dict[sku_id]
+                cookie_cart_str = base64.b64encode(pickle.dumps(cart_dict)).decode()
+                response.set_cookie('carts', cookie_cart_str, 3600)
+
+            return response
+
+
+            
+class CartsSelectAllView(View):
+    """全选购物车"""
+
+    def put(self, request):
+        # 接收参数
+        json_dict = json.loads(request.body.decode())
+        selected = json_dict.get("selected", True)
+        
+        # 校验参数
+        if selected:
+            if not isinstance(selected, bool):
+                return http.HttpResponseForbidden('参数selected有误')
+
+        # 判断用户是否登录
+        user = request.user
+        if user.is_authenticated:
+            # 用户已登录，操作redis购物车
+            redis_conn = get_redis_connection('carts')
+            pl = redis_conn.pipeline()
+            sku_id_list = redis_conn.hgetall("carts_%s" % user.id).keys()
+            sku_ids = list()
+            for sku_id in sku_id_list:
+                sku_ids.append(sku_id.decode())
+            
+            if selected:
+                # 全选
+                pl.sadd('selected_%s' % user.id, *sku_ids)
+            else:
+                pl.srem('selected_%s' % user.id, *sku_ids)
+            pl.execute()
+            return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '全选购物车成功'})
+        else:
+            # 用户未登录，操作cookie购物车
+            cart_dict = request.COOKIES.get('carts', {})
+            response = http.JsonResponse({'code': RETCODE.OK, 'errmsg': '全选购物车成功'})
+            if len(cart_dict):
+                cart_dict = pickle.loads(base64.b64decode(cart_dict.encode()))
+                for sku_id in cart_dict:
+                    cart_dict[sku_id]['selected'] = selected
+                
+                cookie_cart_str = base64.b64encode(pickle.dumps(cart_dict)).decode()
+                response.set_cookie('carts', cookie_cart_str, 3600)
+
+            return response
+
