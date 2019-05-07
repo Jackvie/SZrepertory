@@ -599,3 +599,6 @@ class UserBrowseHistory(LoginRequiredJSONMixin, View):
             })
 
         return http.JsonResponse({"code": RETCODE.OK, "errmsg": "success", "skus": skus})
+
+
+
