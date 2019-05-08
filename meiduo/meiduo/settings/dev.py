@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'areas',
     'goods',
     'carts',
+    'orders',
 ]
 
 # 指定本项目用户模型类
