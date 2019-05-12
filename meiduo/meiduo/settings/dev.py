@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'goods',
     'carts',
     'orders',
+    'payment',
 ]
 
 # 指定本项目用户模型类
@@ -245,3 +246,9 @@ DEFAULT_FILE_STORAGE = 'meiduo.utils.fastdfs.fastdfs_storage.FastDFSStorage'
 
 # nginx ip　和端口　FastDFS相关参数
 FDFS_BASE_URL = "http://192.168.118.130:8888/"
+
+# 支付宝
+ALIPAY_APPID = '2016092900622911'
+ALIPAY_DEBUG = True  # 表示是沙箱环境还是真实支付环境
+ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
+ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
