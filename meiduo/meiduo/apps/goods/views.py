@@ -9,6 +9,7 @@ from contents.utils import get_categories
 from goods.models import GoodsCategory, SKU, GoodsVisitCount
 from goods.utils import get_breadcrumb
 from meiduo.utils.response_code import RETCODE
+from orders.models import OrderGoods
 
 logger = logging.getLogger("django")
 # Create your views here.
@@ -176,6 +177,30 @@ class DetailVisitView(View):
             return http.HttpResponseServerError('服务器异常')
 
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
+
+
+class GoodsCommentView(View):
+    """订单商品评价信息"""
+
+    def get(self, request, sku_id):
+        # 获取被评价的订单商品信息
+
+        goods = OrderGoods.objects.filter(sku_id=sku_id, is_commented=True).order_by('-create_time')[:30]
+
+        comment_list = list()
+
+        for good in goods:
+            username = good.order.user.username
+            comment = good.comment
+            score = good.score
+            comment_list.append({
+                "username": username[0] + '***' + username[-1] if good.is_anonymous else username,
+                "comment": comment,
+                "score": score
+            })
+
+
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'comment_list': comment_list})
 
 
 
