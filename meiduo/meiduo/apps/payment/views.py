@@ -72,19 +72,23 @@ class PaymentStatusView(View):
             order_id = data.get('out_trade_no')
             # 读取支付宝流水号
             trade_id = data.get('trade_no')
-            # 保存Payment模型类数据
-            Payment.objects.create(
-                order_id=order_id,
-                trade_id=trade_id
-            )
-            # 修改订单状态为待评价
-            OrderInfo.objects.filter(order_id=order_id, status=OrderInfo.ORDER_STATUS_ENUM['UNPAID']).update(status=OrderInfo.ORDER_STATUS_ENUM["UNCOMMENT"])
+            try:
+                Payment.objects.get(order_id=order_id,trade_id=trade_id)
+            except Payment.DoesNotExist:
+                # 保存Payment模型类数据
+                Payment.objects.create(
+                    order_id=order_id,
+                    trade_id=trade_id
+                )
+                # 修改订单状态为待评价
+                OrderInfo.objects.filter(order_id=order_id, status=OrderInfo.ORDER_STATUS_ENUM['UNPAID']).update(status=OrderInfo.ORDER_STATUS_ENUM["UNCOMMENT"])
 
-            # 响应trade_id
-            context = {
-                'trade_id': trade_id
-            }
-            return render(request, 'pay_success.html', context)
+                # 响应trade_id
+                context = {
+                    'trade_id': trade_id
+                }
+                return render(request, 'pay_success.html', context)
+            return http.HttpResponseForbidden("订单已经支付过")
 
         else:
             # 订单支付失败，重定向到我的订单

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'carts',
     'orders',
     'payment',
+    'django_crontab',
 ]
 
 # 指定本项目用户模型类
@@ -252,3 +253,10 @@ ALIPAY_APPID = '2016092900622911'
 ALIPAY_DEBUG = True  # 表示是沙箱环境还是真实支付环境
 ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
+
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    ('*/1 * * * *', 'contents.crons.generate_static_index_html', '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
+]
+# 在定时任务中，如果出现非英文字符，会出现字符异常错误
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
