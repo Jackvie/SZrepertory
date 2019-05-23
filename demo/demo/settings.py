@@ -25,7 +25,7 @@ SECRET_KEY = '%##@57p-55j-_(2jd=oadem61h1%yi9+qv$61nd%s_33$e7l!&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -125,3 +125,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# rest_framework全局认证和权限配置
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.SessionAuthentication',  # session认证
+#         # 'rest_framework.authentication.BasicAuthentication',   # 基本认证
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         # 'rest_framework.permissions.AllowAny', # 允许所有人
+#         'rest_framework.permissions.IsAuthenticated', # 允许认证用户
+#     ),
+#
+# }
+
