@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
 
     'booktest',
 ]
@@ -131,7 +132,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # rest_framework全局认证和权限配置
-# REST_FRAMEWORK = {
+REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 #         'rest_framework.authentication.SessionAuthentication',  # session认证
 #         # 'rest_framework.authentication.BasicAuthentication',   # 基本认证
@@ -141,5 +142,37 @@ STATIC_URL = '/static/'
 #         'rest_framework.permissions.IsAuthenticated', # 允许认证用户
 #     ),
 #
-# }
+    # 分别限流全局
+    'DEFAULT_THROTTLE_CLASSES': (
+        # 针对未登录(匿名)用户的限流控制类
+        # 'rest_framework.throttling.AnonRateThrottle',
+        # 针对登录(认证)用户的限流控制类
+        # 'rest_framework.throttling.UserRateThrottle'
+        # 统一限流全局
+        'rest_framework.throttling.ScopedRateThrottle',
+    ),
+    # 指定限流频次
+    'DEFAULT_THROTTLE_RATES': {
+        # 认证用户的限流频次
+        # 'user': '5/minute',
+        # 匿名用户的限流频次
+        # 'anon': '3/minute',
+        # 视图中必须指定throttle_scope = ''
+        'upload': '3/minute',
+        'contacts': '5/minute'
+    },
+
+    # 过滤后端配置DRF
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+
+    # Pagination 设置全局的分页方式
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': '1',  # 每页容量被写死,请求只能指定第几页,请求无法自定义页容量,
+
+    # 默认异常处理函数
+    #'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'EXCEPTION_HANDLER': 'booktest.utils.exception_handler',
+}
+
+
 

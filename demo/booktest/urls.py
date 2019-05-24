@@ -1,13 +1,6 @@
-from rest_framework.routers import SimpleRouter,DefaultRouter
+from django.conf.urls import url
+from booktest import views
 
-from booktest.views import BookInfoViewSet
-
-urlpatterns = [
-
+urlpatterns =[
+    url(r'tests/$', views.TestView.as_view()),
 ]
-
-# router = SimpleRouter()
-router = DefaultRouter()
-router.register(r"books", BookInfoViewSet, "books")
-
-urlpatterns += router.urls
