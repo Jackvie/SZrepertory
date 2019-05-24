@@ -166,8 +166,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 
     # Pagination 设置全局的分页方式
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': '1',  # 每页容量被写死,请求只能指定第几页,请求无法自定义页容量,
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #'PAGE_SIZE': '1',  # 每页容量被写死,请求只能指定第几页,请求无法自定义页容量,
 
     # 默认异常处理函数
     #'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
