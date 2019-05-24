@@ -1,7 +1,7 @@
 from rest_framework import mixins, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
@@ -19,7 +19,8 @@ class BookInfoViewSet(ModelViewSet):
     # 设置视图的认证方案
     authentication_classes = [SessionAuthentication]
     # 指定某个视图所使用的权限控制类
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     # 指定正则
     lookup_value_regex = "\d+"
